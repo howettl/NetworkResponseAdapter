@@ -73,13 +73,13 @@ internal class CoroutinesNetworkResponseAdapter<T : Any, U : Any>(
                             } catch (e: Exception) {
                                 // If unable to extract content, return with a null body and don't parse further
                                 deferred.complete(
-                                        NetworkResponse.ServerError(null, responseCode, headers)
+                                    NetworkResponse.ServerError.fromResult(responseCode, null, headers)
                                 )
                                 return
                             }
                         }
                         // If the error extraction was successful, add it to the deferred object
-                        deferred.complete(NetworkResponse.ServerError(errorBody, responseCode, headers))
+                        NetworkResponse.ServerError.fromResult(responseCode, errorBody, headers)
                     }
 
                     else -> {
@@ -95,7 +95,7 @@ internal class CoroutinesNetworkResponseAdapter<T : Any, U : Any>(
                 val body = response.body()
                 body?.let {
                     deferred.complete(NetworkResponse.Success(it, headers, responseCode))
-                } ?: deferred.complete(NetworkResponse.ServerError(null, responseCode, headers))
+                } ?: deferred.complete(NetworkResponse.ServerError.fromResult(responseCode, null, headers))
             }
         })
 

@@ -44,7 +44,7 @@ internal object ResponseHandler {
           @Suppress("UNCHECKED_CAST")
           NetworkResponse.Success(Unit, headers, code) as NetworkResponse<S, E>
         } else {
-          NetworkResponse.ServerError(null, code, headers)
+          NetworkResponse.ServerError.fromResult(code, null, headers)
         }
       }
     } else {
@@ -54,7 +54,7 @@ internal object ResponseHandler {
         } else {
           errorConverter.convert(errorBody)
         }
-        NetworkResponse.ServerError(convertedBody, code, headers)
+        NetworkResponse.ServerError.fromResult(code, convertedBody, headers)
       } catch (ex: Exception) {
         NetworkResponse.UnknownError(ex, code = code, headers = headers)
       }
